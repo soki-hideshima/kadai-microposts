@@ -15,12 +15,13 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(user_params)
+    @micropost = current_user.microposts.build(micropost_params)
 
     if @user.save
       flash[:success] = 'ユーザを登録しました。'
       redirect_to @user
     else
+      @microposts = current_user.microposts.order(id: :desc).page(params[:page])
       flash.now[:danger] = 'ユーザの登録に失敗しました。'
       render :new
     end
